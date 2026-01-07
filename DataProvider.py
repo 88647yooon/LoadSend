@@ -12,19 +12,19 @@ class DataProvider():
         self.machine_id = 0
         
     def create_packet(self, machine_id, sequence):
-    
      return {
-    
-            "uuid": str(uuid.uuid4()),
-            "timestamp": time.time(),
-            "type": "ALARM" if machine_id % 10 == 0 else "NORMAL",
-            "size_kb": self.size_kb,
-            "payload": self.dummy_payload  # 실제 용량을 차지하는 부분
-        }
+        "uuid": str(uuid.uuid4()),
+        "sequence": sequence,  # 이 부분을 추가해야 서버에서 번호를 확인할 수 있습니다!
+        "timestamp": time.time(),
+        "machine_id": machine_id, # 어떤 머신인지 식별하기 위해 추가
+        "type": "ALARM" if machine_id % 10 == 0 else "NORMAL",
+        "size_kb": self.size_kb,
+        "payload": self.dummy_payload
+     }
        
     
     
         
     def stream_data(self, total_count):
         for i in range(total_count):
-            yield self.create_packet(i) # 하나씩 만들때마다 쏨
+            yield self.create_packet(machine_id = i, sequence = i) # 하나씩 만들때마다 쏨

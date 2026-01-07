@@ -9,7 +9,7 @@ class SimulationManager:
         self.end_time = 0
 
     def start(self, provider, total_count):
-        print(f"🚀 실험 시작 (Total: {total_count}, TPS: {self.tps})")
+        print(f" 실험 시작 (Total: {total_count}, TPS: {self.tps})")
         self.start_time = time.time()
         
         try:
