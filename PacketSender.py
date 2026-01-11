@@ -12,36 +12,45 @@ class DirectDispatcher(BaseDispatcher):
     def __init__(self, target_ip, port=5000):
         self.target_ip = target_ip
         self.port = port
-        self.sock = None # 소켓을 저장할 변수
+        self.sock = None 
 
     def _get_connection(self):
-        """소켓이 없거나 끊겼을 때만 새로 연결하는 헬퍼 메서드"""
+        # 복잡한 체크 대신, 소켓이 없으면 새로 만듭니다.
         if self.sock is None:
             try:
                 self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 self.sock.settimeout(2.0)
                 self.sock.connect((self.target_ip, self.port))
-                print(f"[{self.target_ip}] 연결 성공 (지속 연결 시작)")
+                print(f" [{self.target_ip}] 지속 연결 수립 성공")
             except Exception as e:
                 self.sock = None
-                raise ConnectionError(f"연결 실패: {e}")
+                raise ConnectionError(f"서버 접속 불가: {e}")
         return self.sock
 
     def dispatch(self, packet):
         try:
             sock = self._get_connection()
-            json_data = json.dumps(packet).encode('utf-8')
-            # 💡 패킷 간 구분을 위해 구분자(예: \n)를 추가하는 것이 좋습니다.
-            sock.sendall(json_data + b"\n") 
+            
+            # JSON 직렬화 및 줄바꿈 추가
+            json_data = (json.dumps(packet) + "\n").encode('utf-8')
+            
+            # 전송 시도
+            sock.sendall(json_data)
+            return True
+            
         except (socket.error, ConnectionError) as e:
-            print(f" 전송 중 연결 끊김, 재시도 중... ({e})")
-            self.close() # 끊긴 소켓 정리
-            # 재연결 후 다시 시도하거나 에러 처리
+            # 전송에 실패했을 때만 소켓을 닫고 다음 루프에서 재연결하게 합니다.
+            print(f" [{self.target_ip}] 연결 유실 발생, 다음 패킷 전송 시 재연결 시도 ({e})")
+            self.close()
+            return False
 
     def close(self):
         if self.sock:
-            self.sock.close()
-            self.sock = None
+            try:
+                self.sock.close()
+            except:
+                pass
+        self.sock = None
 
 
 class NetworkLoadBalancer(BaseDispatcher):

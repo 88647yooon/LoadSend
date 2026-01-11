@@ -9,7 +9,7 @@ class SimulationManager:
         self.end_time = 0
 
     def start(self, provider, total_count):
-        print(f"🚀 실험 시작 (Total: {total_count}, TPS: {self.tps})")
+        print(f"실험 시작 (Total: {total_count}, TPS: {self.tps})")
         self.start_time = time.time()
         
         try:
@@ -30,7 +30,7 @@ class SimulationManager:
         duration = (self.end_time - self.start_time)
         print("\n" + "="*40)
         print(" 실험 결과 리포트")
-        print(f"⏱ 총 소요 시간: {duration:.2f} 초")
+        print(f" 총 소요 시간: {duration:.2f} 초")
         print(f" 실제 평균 TPS: {total_count / duration:.2f}")
         print(f"패킷당 평균 지연: {(duration / total_count) * 1000:.4f} ms")
         print("="*40)

@@ -11,7 +11,7 @@ class DataProvider():
         self.dummy_payload = "a" * padding_size
         self.machine_id = 0
         
-    def create_packet(self, machine_id, sequence):
+    def create_packet(self, machine_id):
     
      return {
     
