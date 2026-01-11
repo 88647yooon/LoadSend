@@ -1,5 +1,5 @@
 from DataProvider import DataProvider
-from PacketSender import DirectDispatcher
+from PacketSender import NetworkLoadBalancer
 from SimulationManager import SimulationManager
 from PacketSender import NetworkLoadBalancer
 
@@ -10,7 +10,7 @@ PORT = 5000
 
 # 실험 파라미터
 TOTAL_PACKETS = 1000       # 총 보낼 메시지 개수
-TARGET_TPS = 1000       # 초당 전송 개수 (부하 조절)
+TARGET_TPS = 100           # 초당 전송 개수 (부하 조절)
 PACKET_SIZE_KB = 10        # 패킷 용량 (1, 10, 100KB 중 선택) -> 집가 한번 봐야함
 
 def run_experiment():
