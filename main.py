@@ -4,7 +4,7 @@ from SimulationManager import SimulationManager
 from PacketSender import NetworkLoadBalancer
 
 # 받는 쪽 기기(윈도우/데스크탑)의 IP 주소들
-IP = ["192.168.0.53", "192.168.0.141" ]  # 윈도우 노트북 IP
+IP = ["192.168.0.53" , "192.168.0.141"]  # 윈도우 노트북 IP
     
 PORT = 5000
 
