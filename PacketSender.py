@@ -36,7 +36,7 @@ class DirectDispatcher(BaseDispatcher):
             # 타임아웃은 실험 환경에 맞춰 1.0~2.0초가 적당합니다.
             self.sock.settimeout(2.0) 
             self.sock.connect((self.target_ip, self.port))
-            print(f"✅ [{self.target_ip}] 새 연결 성공")
+            print(f" [{self.target_ip}] 새 연결 성공")
         except Exception as e:
             # 연결 실패 시 반드시 None으로 초기화해서 다음 시도 때 다시 connect하게 함
             self.sock = None
@@ -51,7 +51,7 @@ class DirectDispatcher(BaseDispatcher):
         
        
         if sock is None:
-            print(f"⚠️ [{self.target_ip}] 연결된 소켓이 없어 전송을 취소합니다.")
+            print(f" [{self.target_ip}] 연결된 소켓이 없어 전송을 취소합니다.")
             return False
             
         json_data = (json.dumps(packet) + "\n").encode('utf-8')
