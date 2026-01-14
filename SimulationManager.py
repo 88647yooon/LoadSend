@@ -8,7 +8,7 @@ class SimulationManager:
         self.start_time = 0
         self.end_time = 0
 
-    def start(self, provider, total_count):
+    def start(self, provider, total_count, packet_size):
         print(f"실험 시작 (Total: {total_count}, TPS: {self.tps})")
         self.start_time = time.time()
         
@@ -24,12 +24,12 @@ class SimulationManager:
             self.end_time = time.time()
             # 💡 중요: 실험 종료 후 열려있는 모든 소켓을 닫습니다.
             self.dispatcher.close()
-            self.report(total_count)
+            self.report(total_count, packet_size)
 
-    def report(self, total_count):
+    def report(self, total_count, packet_size):
         duration = (self.end_time - self.start_time)
         print("\n" + "="*40)
-        print(" 실험 결과 리포트")
+        print(" 실험 결과 리포트: ", packet_size)
         print(f" 총 소요 시간: {duration:.2f} 초")
         print(f" 실제 평균 TPS: {total_count / duration:.2f}")
         print(f"패킷당 평균 지연: {(duration / total_count) * 1000:.4f} ms")

@@ -27,23 +27,22 @@ class DirectDispatcher(BaseDispatcher):
                 self.sock = None
                 raise ConnectionError(f"서버 접속 불가: {e}")
         return self.sock
+    
+
 
     def dispatch(self, packet):
-        try:
-            sock = self._get_connection()
-            
-            # JSON 직렬화 및 줄바꿈 추가
-            json_data = (json.dumps(packet) + "\n").encode('utf-8')
-            
-            # 전송 시도
-            sock.sendall(json_data)
-            return True
-            
-        except (socket.error, ConnectionError) as e:
-            # 전송에 실패했을 때만 소켓을 닫고 다음 루프에서 재연결하게 합니다.
-            print(f" [{self.target_ip}] 연결 유실 발생, 다음 패킷 전송 시 재연결 시도 ({e})")
-            self.close()
-            return False
+     try:
+        sock = self._get_connection()
+        if sock is None : return False
+        sock.sendall(packet) 
+        return True
+     
+     except Exception as e:
+        print(f" 전송 중 오류 발생: {e}")
+        self.close()
+        return False
+     
+
 
     def close(self):
         if self.sock:
@@ -79,8 +78,7 @@ class NetworkLoadBalancer(BaseDispatcher):
         
         if sock:
             try:
-                json_data = json.dumps(packet).encode('utf-8')
-                sock.sendall(json_data + b"\n")
+                sock.sendall(packet)
                 self.current_index += 1
             except socket.error:
                 print(f" {target_ip} 연결 유실로 인한 소켓 제거")
